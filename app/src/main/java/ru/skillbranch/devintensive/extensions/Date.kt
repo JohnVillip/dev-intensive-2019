@@ -2,6 +2,7 @@ package ru.skillbranch.devintensive.extensions
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.absoluteValue
 
 const val SECOND = 1000L
 const val MINUTE = 60 * SECOND
@@ -65,15 +66,18 @@ fun Date.humanizeDiff(date: Date = Date()): String {
 }
 
 
-//
-//26ч - 360д "N дней назад"
-//
-//>360д "более года назад"
+private fun declinationSeconds(seconds: Int): String {
+    when(seconds) {
+        1, 21, 31, 41, 51 -> return "секунду"
+        2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54 -> return "секунды"
+        else -> return "секунд"
+    }
+}
 
 private fun declinationMinutes(minutes: Int): String {
     when(minutes) {
-        1, 21, 31, 41 -> return "минуту"
-        2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44 -> return "минуты"
+        1, 21, 31, 41, 51 -> return "минуту"
+        2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54 -> return "минуты"
         else -> return "минут"
     }
 }
@@ -81,7 +85,7 @@ private fun declinationMinutes(minutes: Int): String {
 private fun declinationHours(hours: Int): String {
     when(hours) {
         1, 21 -> return "час"
-        2, 3, 4 -> return "часа"
+        2, 3, 4, 22, 23, 24 -> return "часа"
         else -> return "часов"
     }
 }
@@ -108,6 +112,15 @@ private fun declinationDays(days: Int): String {
 
 
 
+//Необходимо реализовать метод plural для enum TimeUnits
+// Реализуй метод plural для всех перечислений TimeUnits следующего вида TimeUnits.SECOND.plural(value:Int)
+// возвращающую значение с праильно склоненной единицой измерения
+//Пример:
+//TimeUnits.SECOND.plural(1) //1 секунду
+//TimeUnits.MINUTE.plural(4) //4 минуты
+//TimeUnits.HOUR.plural(19) //19 часов
+//TimeUnits.DAY.plural(222) //222 дня
+
 
 
 
@@ -115,5 +128,16 @@ enum class TimeUnits {
     SECOND,
     MINUTE,
     HOUR,
-    DAY
+    DAY;
+
+    fun plural(value: Int): String {
+        val timeUnit = this
+
+        when(timeUnit) {
+            SECOND -> return "$value ${declinationSeconds(value)}"
+            MINUTE -> return "$value ${declinationMinutes(value)}"
+            HOUR   -> return "$value ${declinationHours(value)}"
+            DAY    -> return "$value ${declinationDays(value)}"
+        }
+    }
 }
