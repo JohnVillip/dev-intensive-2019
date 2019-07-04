@@ -2,7 +2,7 @@ package ru.skillbranch.devintensive.extensions
 
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.absoluteValue
+import kotlin.math.abs
 
 const val SECOND = 1000L
 const val MINUTE = 60 * SECOND
@@ -43,11 +43,11 @@ fun Date.humanizeDiff(date: Date = Date()): String {
             in -2 * SECOND until 0 -> return "только что"
             in -45 * SECOND until -2 * SECOND -> return "через несколько секунд"
             in -75 * SECOND until -45 * SECOND -> return "через минуту"
-            in -45 * MINUTE until -75 * SECOND -> return "через ${-(res / MINUTE).toInt()} " + declinationMinutes(-(res / MINUTE).toInt())
+            in -45 * MINUTE until -75 * SECOND -> return "через ${-(res / MINUTE).toInt()} " + declinationMinutes((res / MINUTE).toInt())
             in -75 * MINUTE until -45 * MINUTE -> return "через час"
-            in -22 * HOUR until -75 * MINUTE -> return "через ${-(res / HOUR).toInt()} " + declinationHours(-(res / HOUR).toInt())
+            in -22 * HOUR until -75 * MINUTE -> return "через ${-(res / HOUR).toInt()} " + declinationHours((res / HOUR).toInt())
             in -26 * HOUR until -22 * HOUR -> return "через день"
-            in -360 * DAY until -26 * HOUR   -> return "через ${-(res / DAY).toInt()} " + declinationDays(-(res / DAY).toInt())
+            in -360 * DAY until -26 * HOUR   -> return "через ${-(res / DAY).toInt()} " + declinationDays((res / DAY).toInt())
             else -> return "более чем через год"
         }
     } else {
@@ -66,47 +66,95 @@ fun Date.humanizeDiff(date: Date = Date()): String {
 }
 
 
+//private fun declinationSeconds(seconds: Int): String {
+//    when(seconds) {
+//        1, 21, 31, 41, 51 -> return "секунду"
+//        2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54 -> return "секунды"
+//        else -> return "секунд"
+//    }
+//}
+//
+//private fun declinationMinutes(minutes: Int): String {
+//    when(minutes) {
+//        1, 21, 31, 41, 51 -> return "минуту"
+//        2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54 -> return "минуты"
+//        else -> return "минут"
+//    }
+//}
+//
+//private fun declinationHours(hours: Int): String {
+//    when(hours) {
+//        1, 21 -> return "час"
+//        2, 3, 4, 22, 23, 24 -> return "часа"
+//        else -> return "часов"
+//    }
+//}
+//
+//private fun declinationDays(days: Int): String {
+//    var cutDays = days
+//
+//    if(cutDays > 300) {
+//        cutDays -= 300
+//    }
+//    if(cutDays > 200) {
+//        cutDays -= 200
+//    }
+//    if(cutDays > 100) {
+//        cutDays -= 100
+//    }
+//
+//    when(cutDays) {
+//        1, 21, 31, 41, 51, 61, 71, 81, 91 -> return "день"
+//        2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54, 62, 63, 64, 72, 73, 74, 82, 83, 84, 92, 93, 94 -> return "дня"
+//        else -> return "дней"
+//    }
+//}
+
 private fun declinationSeconds(seconds: Int): String {
-    when(seconds) {
-        1, 21, 31, 41, 51 -> return "секунду"
-        2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54 -> return "секунды"
-        else -> return "секунд"
-    }
+    var cutSeconds = abs(seconds) % 100
+    if(cutSeconds in 10 .. 20) return "секунд"
+    cutSeconds %= 10
+
+    when(cutSeconds) {
+        1         -> return "секунду"
+        in 2 .. 4 -> return "секунды"
+        else      -> return "секунд"
+     }
 }
 
 private fun declinationMinutes(minutes: Int): String {
-    when(minutes) {
-        1, 21, 31, 41, 51 -> return "минуту"
-        2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54 -> return "минуты"
-        else -> return "минут"
+    var cutMinutes = abs(minutes) % 100
+    if(cutMinutes in 10 .. 20) return "минут"
+    cutMinutes %= 10
+
+    when(cutMinutes) {
+        1         -> return "минуту"
+        in 2 .. 4 -> return "минуты"
+        else      -> return "минут"
     }
 }
 
 private fun declinationHours(hours: Int): String {
-    when(hours) {
-        1, 21 -> return "час"
-        2, 3, 4, 22, 23, 24 -> return "часа"
-        else -> return "часов"
+    var cutHours = abs(hours) % 100
+    if(cutHours in 10 .. 20) return "часов"
+    cutHours %= 10
+
+    when(cutHours) {
+        1         -> return "час"
+        in 2 .. 4 -> return "часа"
+        else      -> return "часов"
     }
 }
 
 private fun declinationDays(days: Int): String {
-    var cutDays = days
-
-    if(cutDays > 300) {
-        cutDays -= 300
-    }
-    if(cutDays > 200) {
-        cutDays -= 200
-    }
-    if(cutDays > 100) {
-        cutDays -= 100
-    }
+    var cutDays = abs(days) % 100
+    if(cutDays in 10 .. 20) return "дней"
+    cutDays %= 10
 
     when(cutDays) {
-        1, 21, 31, 41, 51, 61, 71, 81, 91 -> return "день"
-        2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54, 62, 63, 64, 72, 73, 74, 82, 83, 84, 92, 93, 94 -> return "дня"
-        else -> return "дней"
+        1         -> return "день"
+        in 2 .. 4 -> return "дня"
+        else      -> return "дней"
     }
 }
 
