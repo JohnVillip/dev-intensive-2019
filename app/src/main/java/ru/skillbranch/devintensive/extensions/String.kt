@@ -25,14 +25,89 @@ fun String.truncate( characters: Int = 16): String {
 }
 
 fun String.stripHtml(): String {
-    var resString: String
+
+    var match: MatchResult?
+
+    var resString = this
+
+    do {
+        val regex = "(?<=<)(.*?)(?=>)".toRegex()
+
+        match = regex.find(resString)
+
+        if (match != null) {
+//        println(match?.value)
+//        println(match?.range)
+
+            var newString = ""
+
+            var first = match?.range.first - 1
+            var last = match?.range.last + 1
+
+            for(i in resString.indices) {
+
+                if(i in first .. last) {
+                    continue
+                }
+
+                if(resString.get(i) == ' ' && resString.get(i-1) == ' ') {
+                    continue
+                }
+
+                newString = newString + resString.get(i).toString()
+            }
+
+            resString = newString
+
+//            println(resString)
+
+        }
+    } while(regex.find(resString) != null)
+
+    do {
+        val regex = "(?<=&)(.*?)(?=;)".toRegex()
+
+        match = regex.find(resString)
+
+        if (match != null) {
+//        println(match?.value)
+//        println(match?.range)
+
+            var newString = ""
+
+            var first = match?.range.first - 1
+            var last = match?.range.last + 1
+
+            for(i in resString.indices) {
+
+                if(i in first .. last) {
+                    continue
+                }
+
+                if(i > 1 && (resString.get(i) == ' ' && resString.get(i-1) == ' ')) {
+                    continue
+                }
+
+                newString = newString + resString.get(i).toString()
+            }
+
+            resString = newString
+
+//            println(resString)
+
+        }
+    } while(regex.find(resString) != null)
+
+
+
+
 
 //    for(i in this.indices) {
 //        if
 //
 //    }
 
-    return "в работе пока"
+    return resString
 
 }
 
