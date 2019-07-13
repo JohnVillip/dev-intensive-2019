@@ -39,28 +39,28 @@ fun Date.humanizeDiff(date: Date = Date()): String {
 
     if(res < 0) {
         res -= 100
-        when(res) {
-            in -2 * SECOND until 0 -> return "только что"
-            in -45 * SECOND until -2 * SECOND -> return "через несколько секунд"
-            in -75 * SECOND until -45 * SECOND -> return "через минуту"
-            in -45 * MINUTE until -75 * SECOND -> return "через ${-(res / MINUTE).toInt()} " + declinationMinutes((res / MINUTE).toInt())
-            in -75 * MINUTE until -45 * MINUTE -> return "через час"
-            in -22 * HOUR until -75 * MINUTE -> return "через ${-(res / HOUR).toInt()} " + declinationHours((res / HOUR).toInt())
-            in -26 * HOUR until -22 * HOUR -> return "через день"
-            in -360 * DAY until -26 * HOUR   -> return "через ${-(res / DAY).toInt()} " + declinationDays((res / DAY).toInt())
-            else -> return "более чем через год"
+        return when(res) {
+            in -2 * SECOND until 0             -> "только что"
+            in -45 * SECOND until -2 * SECOND  -> "через несколько секунд"
+            in -75 * SECOND until -45 * SECOND -> "через минуту"
+            in -45 * MINUTE until -75 * SECOND -> "через ${-(res / MINUTE).toInt()} " + declinationMinutes((res / MINUTE).toInt())
+            in -75 * MINUTE until -45 * MINUTE -> "через час"
+            in -22 * HOUR until -75 * MINUTE   -> "через ${-(res / HOUR).toInt()} " + declinationHours((res / HOUR).toInt())
+            in -26 * HOUR until -22 * HOUR     -> "через день"
+            in -360 * DAY until -26 * HOUR     -> "через ${-(res / DAY).toInt()} " + declinationDays((res / DAY).toInt())
+            else                               -> "более чем через год"
         }
     } else {
-        when(res) {
-            in 0 until 1 * SECOND -> return "только что"
-            in 1 * SECOND until 45 * SECOND -> return "несколько секунд назад"
-            in 45 * SECOND until 75 * SECOND -> return "минуту назад"
-            in 75 * SECOND until 45 * MINUTE -> return "${(res / MINUTE).toInt()} " + declinationMinutes((res / MINUTE).toInt()) + " назад"
-            in 45 * MINUTE until 75 * MINUTE -> return "час назад"
-            in 75 * MINUTE until 22 * HOUR -> return "${(res / HOUR).toInt()} " + declinationHours((res / HOUR).toInt()) + " назад"
-            in 22 * HOUR until 26 * HOUR -> return "день назад"
-            in 26 * HOUR until 360 * DAY -> return "${(res / DAY).toInt()} " + declinationDays((res / DAY).toInt()) + " назад"
-            else -> return "более года назад"
+        return when(res) {
+            in 0 until 1 * SECOND            -> "только что"
+            in 1 * SECOND until 45 * SECOND  -> "несколько секунд назад"
+            in 45 * SECOND until 75 * SECOND -> "минуту назад"
+            in 75 * SECOND until 45 * MINUTE -> "${(res / MINUTE).toInt()} " + declinationMinutes((res / MINUTE).toInt()) + " назад"
+            in 45 * MINUTE until 75 * MINUTE -> "час назад"
+            in 75 * MINUTE until 22 * HOUR   -> "${(res / HOUR).toInt()} " + declinationHours((res / HOUR).toInt()) + " назад"
+            in 22 * HOUR until 26 * HOUR     -> "день назад"
+            in 26 * HOUR until 360 * DAY     -> "${(res / DAY).toInt()} " + declinationDays((res / DAY).toInt()) + " назад"
+            else                             -> "более года назад"
         }
     }
 }
@@ -115,10 +115,10 @@ private fun declinationSeconds(seconds: Int): String {
     if(cutSeconds in 10 .. 20) return "секунд"
     cutSeconds %= 10
 
-    when(cutSeconds) {
-        1         -> return "секунду"
-        in 2 .. 4 -> return "секунды"
-        else      -> return "секунд"
+    return when(cutSeconds) {
+        1         -> "секунду"
+        in 2 .. 4 -> "секунды"
+        else      -> "секунд"
      }
 }
 
@@ -127,10 +127,10 @@ private fun declinationMinutes(minutes: Int): String {
     if(cutMinutes in 10 .. 20) return "минут"
     cutMinutes %= 10
 
-    when(cutMinutes) {
-        1         -> return "минуту"
-        in 2 .. 4 -> return "минуты"
-        else      -> return "минут"
+    return when(cutMinutes) {
+        1         -> "минуту"
+        in 2 .. 4 -> "минуты"
+        else      -> "минут"
     }
 }
 
@@ -139,10 +139,10 @@ private fun declinationHours(hours: Int): String {
     if(cutHours in 10 .. 20) return "часов"
     cutHours %= 10
 
-    when(cutHours) {
-        1         -> return "час"
-        in 2 .. 4 -> return "часа"
-        else      -> return "часов"
+    return when(cutHours) {
+        1         -> "час"
+        in 2 .. 4 -> "часа"
+        else      -> "часов"
     }
 }
 
@@ -151,10 +151,10 @@ private fun declinationDays(days: Int): String {
     if(cutDays in 10 .. 20) return "дней"
     cutDays %= 10
 
-    when(cutDays) {
-        1         -> return "день"
-        in 2 .. 4 -> return "дня"
-        else      -> return "дней"
+    return when(cutDays) {
+        1         -> "день"
+        in 2 .. 4 -> "дня"
+        else      -> "дней"
     }
 }
 
@@ -181,11 +181,11 @@ enum class TimeUnits {
     fun plural(value: Int): String {
         val timeUnit = this
 
-        when(timeUnit) {
-            SECOND -> return "$value ${declinationSeconds(value)}"
-            MINUTE -> return "$value ${declinationMinutes(value)}"
-            HOUR   -> return "$value ${declinationHours(value)}"
-            DAY    -> return "$value ${declinationDays(value)}"
+        return when(timeUnit) {
+            SECOND -> "$value ${declinationSeconds(value)}"
+            MINUTE -> "$value ${declinationMinutes(value)}"
+            HOUR   -> "$value ${declinationHours(value)}"
+            DAY    -> "$value ${declinationDays(value)}"
         }
     }
 }
