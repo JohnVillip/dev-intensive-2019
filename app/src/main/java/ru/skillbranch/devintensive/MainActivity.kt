@@ -49,13 +49,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         messageEt.setOnEditorActionListener { view, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_DONE) {
-                val (phrase, color) = benderObj.listenAnswer(messageEt.text.toString().toLowerCase())
-                messageEt.setText("")
-                val (r, g, b) = color
-                benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
-                textTxt.text = phrase
-
-                hideKeyboard()
+                send()
 
                 true
             }
@@ -71,13 +65,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         if(v?.id == R.id.iv_send) {
-            val (phrase, color) = benderObj.listenAnswer(messageEt.text.toString().toLowerCase())
-            messageEt.setText("")
-            val (r, g, b) = color
-            benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
-            textTxt.text = phrase
-
-            hideKeyboard()
+            send()
         }
     }
 
@@ -90,6 +78,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
         Log.d("M_MainActivity", "onSaveInstanceState ${benderObj.status.name}  ${benderObj.question.name}")
+    }
+
+    fun send() {
+        val (phrase, color) = benderObj.listenAnswer(messageEt.text.toString().toLowerCase())
+        messageEt.setText("")
+        val (r, g, b) = color
+        benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
+        textTxt.text = phrase
+
+        hideKeyboard()
     }
 
 }
