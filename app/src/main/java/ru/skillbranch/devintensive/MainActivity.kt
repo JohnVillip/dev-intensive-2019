@@ -65,7 +65,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         if(v?.id == R.id.iv_send) {
-            send()
+            if (isAnswerValid())
+                send()
+            else makeErrorMessage()
+            hideKeyboard()
         }
     }
 
@@ -86,8 +89,23 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val (r, g, b) = color
         benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
         textTxt.text = phrase
+    }
 
-        hideKeyboard()
+    private fun makeErrorMessage() {
+        val errorMessage = when(benderObj.question){
+            Bender.Question.NAME -> "Имя должно начинаться с заглавной буквы"
+            Bender.Question.PROFESSION -> "Профессия должна начинаться со строчной буквы"
+            Bender.Question.MATERIAL -> "Материал не должен содержать цифр"
+            Bender.Question.BDAY -> "Год моего рождения должен содержать только цифры"
+            Bender.Question.SERIAL -> "Серийный номер содержит только цифры, и их 7"
+            else -> "На этом все, вопросов больше нет"
+        }
+        textTxt.text = errorMessage + "\n" + benderObj.question.question
+        messageEt.setText("")
+    }
+
+    private fun isAnswerValid(): Boolean {
+        return benderObj.question.isValidate(messageEt.text.toString())
     }
 
 }
