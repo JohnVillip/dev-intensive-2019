@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun isAnswerValid(): Boolean {
-        return benderObj.question.isValidate(messageEt.text.toString())
+        return benderObj.question.validate(messageEt.text.toString())
     }
 
 }
